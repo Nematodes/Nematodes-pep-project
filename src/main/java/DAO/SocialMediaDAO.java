@@ -232,4 +232,41 @@ public class SocialMediaDAO {
 
         return messageList;
     }
+
+    /**
+     * Attempts to get a message by ID from the application's database
+     * 
+     * @param id the ID of the message to query for
+     * @return the Message with a matching ID, or null if a matching Message record is not found
+     */
+    public Message getMessageById(int id) {
+        try {
+            // Get a connection to the application's database
+            Connection connection = ConnectionUtil.getConnection();
+
+            // Create a SQL statement that gets the message with the matching ID
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Message WHERE message_id = ?");
+
+            // Set the ID parameter of the SQL statement
+            ps.setInt(1, id);
+
+            // Run the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // If message data was found by the query, then create and return a Message using that data
+            while (rs.next()) {
+                int resultPosted_by = rs.getInt(2);
+                String resultMessage_text = rs.getString(3);
+                long resultTime_posted_epoch = rs.getLong(4);
+
+                return new Message(id, resultPosted_by, resultMessage_text, resultTime_posted_epoch);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // If a SQLException occurred or a message with the desired ID was not found, then return null
+        return null;
+    }
 }

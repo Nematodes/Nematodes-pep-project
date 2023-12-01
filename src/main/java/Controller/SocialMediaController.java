@@ -33,6 +33,8 @@ public class SocialMediaController {
 
         app.get("/messages", this::getAllMessages);
 
+        app.get("/messages/{message_id}", this::getMessageById);
+
         return app;
     }
 
@@ -118,6 +120,34 @@ public class SocialMediaController {
 
         // Set the HTTP response status to 200
         context.json(messageList).status(200);
+    }
+
+    /**
+     * Gets a message by ID from the application's database
+     * 
+     * If no message is found, then the HTTP response body is left empty.
+     * 
+     * Always sets the HTTP response status to 200
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void getMessageById(Context context) {
+        // Get the message ID from the endpoint's path
+        int idFromPath = Integer.parseInt(context.pathParam("message_id"));
+
+        // Get the message with a matching ID
+        Message returnedMessage = socialMediaService.getMessageById(idFromPath);
+
+        if (returnedMessage != null)
+        {
+            // Set the HTTP response status to 200 and return the obtained Message
+            context.json(returnedMessage).status(200);
+        }
+        else
+        {
+            // Set the HTTP response status to 200 while leaving the response body blank
+            context.status(200);
+        }
     }
 
     /**

@@ -79,6 +79,16 @@ public class SocialMediaService {
     }
 
     /**
+     * Attempts to get a message by ID from the application's database
+     * 
+     * @param id the ID of the message to query for
+     * @return the Message with a matching ID, or null if a matching Message record is not found
+     */
+    public Message getMessageById(int id) {
+        return socialMediaDao.getMessageById(id);
+    }
+
+    /**
      * Attempts to login to an account using the supplied Account's username and password
      * 
      * Actual login logic is currently not implemented. This method will successfully return
