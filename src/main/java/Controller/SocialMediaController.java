@@ -2,13 +2,19 @@ package Controller;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import Model.*;
+import Service.*;
 
-/**
- * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
- * found in readme.md as well as the test cases. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
- */
 public class SocialMediaController {
+    private AccountService accountService;
+
+    /**
+     * Creates a new SocialMediaController object
+     */
+    public SocialMediaController() {
+        this.accountService = new AccountService();
+    }
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -18,7 +24,37 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
 
+        app.post("/register", this::addAccount);
+
         return app;
+    }
+
+    /**
+     * Attempts to add a new account to the application's database.
+     * 
+     * The attempt will fail under the following conditions:
+     * The username is blank (empty string)
+     * The password is less than 4 characters long
+     * An account with this username already exists
+     * 
+     * On success, the HTTP response status is set to 200.
+     * On failure, the HTTP response status is set to 400.
+     * 
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void addAccount(Context context) {
+        Account accountFromBody = context.bodyAsClass(Account.class);
+
+        Account accountInserted = accountService.addAccount(accountFromBody);
+
+        if (accountInserted != null)
+        {
+            context.json(accountInserted).status(200);
+        }
+        else
+        {
+            context.status(400);
+        }
     }
 
     /**
@@ -28,6 +64,4 @@ public class SocialMediaController {
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
-
-
 }
