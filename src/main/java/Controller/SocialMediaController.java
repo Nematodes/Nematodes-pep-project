@@ -1,5 +1,6 @@
 package Controller;
 
+import com.fasterxml.jackson.databind.*;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getMessageById);
 
         app.delete("/messages/{message_id}", this::deleteMessageById);
+
+        app.patch("/messages/{message_id}", this::updateMessageById);
 
         return app;
     }
@@ -197,6 +200,38 @@ public class SocialMediaController {
         }
         else {
             context.status(401);
+        }
+    }
+
+    /**
+     * Attempts to update the text of a message by ID from the application's database
+     * 
+     * The attempt will fail under the following conditions:
+     * The message is not between 1 and 254 (inclusive) charcters long
+     * The message specified by the ID does not exist
+     * 
+     * On success, the HTTP response status is set to 200.
+     * On failure, the HTTP response status is set to 400.
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void updateMessageById(Context context) {
+        // Get the message ID from the endpoint's path
+        int idFromPath = Integer.parseInt(context.pathParam("message_id"));
+
+        // Get the Message object from the Javalin context
+        Message messageFromBody = context.bodyAsClass(Message.class);
+
+        // Update the text of the message with a matching ID
+        Message updatedMessage = socialMediaService.updateMessageById(idFromPath, messageFromBody.getMessage_text());
+
+        if (updatedMessage != null) {
+            // Set the HTTP response status to 200 and return the updated Message
+            context.json(updatedMessage).status(200);
+        }
+        else {
+            // Set the HTTP response status to 400 while leaving the response body blank
+            context.status(400);
         }
     }
 }

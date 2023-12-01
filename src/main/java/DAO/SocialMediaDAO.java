@@ -293,4 +293,30 @@ public class SocialMediaDAO {
         // If a SQLException occurred or a message with the desired ID was not found, then return null
         return null;
     }
+
+    /**
+     * Attempts to update the text of a message by ID from the application's database
+     * 
+     * @param id the ID of the message to update
+     * @param newMessage the new text to update the Message with
+     */
+    public void updateMessageById(int id, String newMessage) {
+        try {
+            // Get a connection to the application's database
+            Connection connection = ConnectionUtil.getConnection();
+
+            // Create a SQL statement that deletes the message with the matching ID
+            PreparedStatement ps = connection.prepareStatement("UPDATE Message SET message_text = ? WHERE message_id = ?");
+
+            // Set the message_text and ID parameters of the SQL statement
+            ps.setString(1, newMessage);
+            ps.setInt(2, id);
+
+            // Run the SQL statement
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

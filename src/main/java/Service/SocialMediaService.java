@@ -120,4 +120,31 @@ public class SocialMediaService {
         // Attempt to get an account with matching username and password credentials
         return socialMediaDao.getAccountByCredentials(accountToAdd.getUsername(), accountToAdd.getPassword());
     }
+
+    /**
+     * Attempts to update the text of a message by ID from the application's database
+     * 
+     * @param id the ID of the message to delete
+     * @param newMessage the new text to update the Message with
+     * @return the updated Message or null if a matching Message record is not found
+     */
+    public Message updateMessageById(int id, String newMessage) {
+        // Reject new messages that fail to meet the necessary message length conditions
+        if (newMessage.length() == 0 || newMessage.length() >= 255) {
+            return null;
+        }
+
+        // Get the message by ID if it exists - updating the message would not return it, so it needs to be obtained now
+        Message returnedMessage = socialMediaDao.getMessageById(id);
+
+        // If the message exists, then update it
+        if (returnedMessage != null) {
+            socialMediaDao.updateMessageById(id, newMessage);
+
+            // Replace returnedMessage with the updated message data to verify that message_text was changed
+            returnedMessage = socialMediaDao.getMessageById(id);
+        }
+
+        return returnedMessage;
+    }
 }
