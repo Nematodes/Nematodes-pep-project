@@ -70,6 +70,25 @@ public class SocialMediaService {
     }
 
     /**
+     * Attempts to delete a message by ID from the application's database
+     * 
+     * @param id the ID of the message to delete
+     * @return the Message with a matching ID, or null if a matching Message record is not found
+     */
+    public Message deleteMessageById(int id) {
+        // Get the message by ID if it exists - deleting the message would not return it, so it needs to be obtained now
+        Message returnedMessage = socialMediaDao.getMessageById(id);
+
+        // If the message exists, then delete it
+        if (returnedMessage != null)
+        {
+            socialMediaDao.deleteMessageById(id);
+        }
+
+        return returnedMessage;
+    }
+
+    /**
      * Gets all messages from the application's database
      * 
      * @return a list of Message objects

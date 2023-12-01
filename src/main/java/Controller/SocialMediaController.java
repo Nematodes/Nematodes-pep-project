@@ -35,6 +35,8 @@ public class SocialMediaController {
 
         app.get("/messages/{message_id}", this::getMessageById);
 
+        app.delete("/messages/{message_id}", this::deleteMessageById);
+
         return app;
     }
 
@@ -59,12 +61,10 @@ public class SocialMediaController {
         Account accountInserted = socialMediaService.addAccount(accountFromBody);
 
         // Set the HTTP response based on whether or not the account was successfully added
-        if (accountInserted != null)
-        {
+        if (accountInserted != null) {
             context.json(accountInserted).status(200);
         }
-        else
-        {
+        else {
             context.status(400);
         }
     }
@@ -89,13 +89,38 @@ public class SocialMediaController {
         Message messageInserted = socialMediaService.addMessage(messageFromBody);
 
         // Set the HTTP response based on whether or not the message was successfully added
-        if (messageInserted != null)
-        {
+        if (messageInserted != null) {
             context.json(messageInserted).status(200);
         }
-        else
-        {
+        else {
             context.status(400);
+        }
+    }
+
+    /**
+     * Deletes a message by ID from the application's database
+     * 
+     * If the message is deleted, then the response body contains the deleted Message.
+     * Otherwise, the response body is left empty.
+     * 
+     * Always sets the HTTP response status to 200
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void deleteMessageById(Context context) {
+        // Get the message ID from the endpoint's path
+        int idFromPath = Integer.parseInt(context.pathParam("message_id"));
+
+        // Delete the message with a matching ID
+        Message deletedMessage = socialMediaService.deleteMessageById(idFromPath);
+
+        if (deletedMessage != null) {
+            // Set the HTTP response status to 200 and return the obtained Message
+            context.json(deletedMessage).status(200);
+        }
+        else {
+            // Set the HTTP response status to 200 while leaving the response body blank
+            context.status(200);
         }
     }
 
@@ -138,13 +163,11 @@ public class SocialMediaController {
         // Get the message with a matching ID
         Message returnedMessage = socialMediaService.getMessageById(idFromPath);
 
-        if (returnedMessage != null)
-        {
+        if (returnedMessage != null) {
             // Set the HTTP response status to 200 and return the obtained Message
             context.json(returnedMessage).status(200);
         }
-        else
-        {
+        else {
             // Set the HTTP response status to 200 while leaving the response body blank
             context.status(200);
         }
@@ -169,12 +192,10 @@ public class SocialMediaController {
         Account accountLoggedIn = socialMediaService.loginToAccount(accountFromBody);
 
         // Set the HTTP response based on whether or not the account was successfully logged in to
-        if (accountLoggedIn != null)
-        {
+        if (accountLoggedIn != null) {
             context.json(accountLoggedIn).status(200);
         }
-        else
-        {
+        else {
             context.status(401);
         }
     }

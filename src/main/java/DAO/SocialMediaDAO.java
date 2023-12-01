@@ -90,6 +90,30 @@ public class SocialMediaDAO {
     }
 
     /**
+     * Attempts to delete a message by ID from the application's database
+     * 
+     * @param id the ID of the message to delete
+     */
+    public void deleteMessageById(int id) {
+        try {
+            // Get a connection to the application's database
+            Connection connection = ConnectionUtil.getConnection();
+
+            // Create a SQL statement that deletes the message with the matching ID
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM Message WHERE message_id = ?");
+
+            // Set the ID parameter of the SQL statement
+            ps.setInt(1, id);
+
+            // Run the SQL statement
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Gets an Account with a matching username and password from the application's database
      * 
      * @param username the username of the account to find in the database
