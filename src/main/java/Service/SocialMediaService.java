@@ -98,6 +98,16 @@ public class SocialMediaService {
     }
 
     /**
+     * Gets all messages of a user with the requested account ID from the application's database
+     * 
+     * @param id the ID of the user to get all messages from
+     * @return a list of every message posted by the account with the requested ID (empty if the account does not exist)
+     */
+    public ArrayList<Message> getAllMessagesByUser(int id) {
+        return socialMediaDao.getAllMessagesByUser(id);
+    }
+
+    /**
      * Attempts to get a message by ID from the application's database
      * 
      * @param id the ID of the message to query for

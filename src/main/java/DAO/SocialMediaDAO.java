@@ -258,6 +258,44 @@ public class SocialMediaDAO {
     }
 
     /**
+     * Gets all messages of a user with the requested account ID from the application's database
+     * 
+     * @param id the ID of the user to get all messages from
+     * @return a list of every message posted by the account with the requested ID (empty if the account does not exist)
+     */
+    public ArrayList<Message> getAllMessagesByUser(int id) {
+        ArrayList<Message> messageList = new ArrayList<>();
+
+        try {
+            // Get a connection to the application's database
+            Connection connection = ConnectionUtil.getConnection();
+
+            // Create a SQL statement that gets all messages
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Message WHERE posted_by = ?");
+
+            // Set the ID parameter of the SQL statement
+            ps.setInt(1, id);
+
+            // Run the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // If message data was found by the query, then create Message objects from each row and add them to a list
+            while (rs.next()) {
+                int message_id = rs.getInt(1);
+                String message_text = rs.getString(3);
+                long time_posted_epoch = rs.getLong(4);
+
+                messageList.add(new Message(message_id, id, message_text, time_posted_epoch));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return messageList;
+    }
+
+    /**
      * Attempts to get a message by ID from the application's database
      * 
      * @param id the ID of the message to query for

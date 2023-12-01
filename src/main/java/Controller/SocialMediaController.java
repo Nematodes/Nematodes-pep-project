@@ -40,6 +40,8 @@ public class SocialMediaController {
 
         app.patch("/messages/{message_id}", this::updateMessageById);
 
+        app.get("/accounts/{account_id}/messages", this::getAllMessagesByUser);
+
         return app;
     }
 
@@ -147,6 +149,26 @@ public class SocialMediaController {
         ArrayList<Message> messageList = socialMediaService.getAllMessages();
 
         // Set the HTTP response status to 200
+        context.json(messageList).status(200);
+    }
+
+    /**
+     * Gets all messages of a user with the requested account ID from the application's database
+     * 
+     * If a user with the account ID is not found, then an empty list is returned.
+     * 
+     * Always sets the HTTP response status to 200
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void getAllMessagesByUser(Context context) {
+        // Get the account ID from the endpoint's path
+        int idFromPath = Integer.parseInt(context.pathParam("account_id"));
+
+        // Get all of the desired user's messages from the application's database
+        ArrayList<Message> messageList = socialMediaService.getAllMessagesByUser(idFromPath);
+
+        // Set the HTTP message body to the message list and set the HTTP response status to 200
         context.json(messageList).status(200);
     }
 
