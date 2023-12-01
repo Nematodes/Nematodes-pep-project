@@ -26,6 +26,8 @@ public class SocialMediaController {
 
         app.post("/register", this::addAccount);
 
+        app.post("/login", this::loginToAccount);
+
         return app;
     }
 
@@ -40,7 +42,7 @@ public class SocialMediaController {
      * On success, the HTTP response status is set to 200.
      * On failure, the HTTP response status is set to 400.
      * 
-     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
      */
     private void addAccount(Context context) {
         // Get the Account object from the Javalin context
@@ -66,5 +68,34 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+    }
+
+    /**
+     * Attempts to login to an account using the supplied username and password
+     * 
+     * Actual login logic is currently not implemented. This method will succeed if an account
+     * with a matching username and password is found in the application's database.
+     * 
+     * On success, the HTTP response status is set to 200.
+     * On failure, the HTTP response status is set to 401.
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void loginToAccount(Context context) {
+        // Get the Account object from the Javalin context
+        Account accountFromBody = context.bodyAsClass(Account.class);
+
+        // Insert the account into the application's database
+        Account accountLoggedIn = accountService.loginToAccount(accountFromBody);
+
+        // Set the HTTP response based on whether or not the account was successfully logged in to
+        if (accountLoggedIn != null)
+        {
+            context.json(accountLoggedIn).status(200);
+        }
+        else
+        {
+            context.status(401);
+        }
     }
 }
