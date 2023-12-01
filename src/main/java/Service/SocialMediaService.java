@@ -1,16 +1,16 @@
 package Service;
 
-import DAO.AccountDAO;
+import DAO.SocialMediaDAO;
 import Model.Account;
 
-public class AccountService {
-    private AccountDAO accountDao;
+public class SocialMediaService {
+    private SocialMediaDAO socialMediaDao;
 
     /**
-     * Creates a new AccountService object
+     * Creates a new SocialMediaService object
      */
-    public AccountService() {
-        accountDao = new AccountDAO();
+    public SocialMediaService() {
+        socialMediaDao = new SocialMediaDAO();
     }
 
     /**
@@ -35,12 +35,12 @@ public class AccountService {
         }
 
         // If an account with the desired username already exists, then reject it
-        if (accountDao.getAccountByUsername(accountToAdd.getUsername()) != null) {
+        if (socialMediaDao.getAccountByUsername(accountToAdd.getUsername()) != null) {
             return null;
         }
 
         // Add an account using the desired username and password fields
-        return accountDao.addAccount(accountToAdd.getUsername(), accountToAdd.getPassword());
+        return socialMediaDao.addAccount(accountToAdd.getUsername(), accountToAdd.getPassword());
     }
 
     /**
@@ -54,6 +54,6 @@ public class AccountService {
      */
     public Account loginToAccount(Account accountToAdd) {
         // Attempt to get an account with matching username and password credentials
-        return accountDao.getAccountByCredentials(accountToAdd.getUsername(), accountToAdd.getPassword());
+        return socialMediaDao.getAccountByCredentials(accountToAdd.getUsername(), accountToAdd.getPassword());
     }
 }

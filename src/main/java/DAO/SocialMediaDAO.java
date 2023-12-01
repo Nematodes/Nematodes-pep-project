@@ -4,7 +4,7 @@ import java.sql.*;
 import Model.Account;
 import Util.ConnectionUtil;
 
-public class AccountDAO {
+public class SocialMediaDAO {
     /**
      * Adds an account to the application's database
      * 

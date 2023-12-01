@@ -6,13 +6,13 @@ import Model.*;
 import Service.*;
 
 public class SocialMediaController {
-    private AccountService accountService;
+    private SocialMediaService socialMediaService;
 
     /**
      * Creates a new SocialMediaController object
      */
     public SocialMediaController() {
-        this.accountService = new AccountService();
+        this.socialMediaService = new SocialMediaService();
     }
 
     /**
@@ -49,7 +49,7 @@ public class SocialMediaController {
         Account accountFromBody = context.bodyAsClass(Account.class);
 
         // Insert the account into the application's database
-        Account accountInserted = accountService.addAccount(accountFromBody);
+        Account accountInserted = socialMediaService.addAccount(accountFromBody);
 
         // Set the HTTP response based on whether or not the account was successfully added
         if (accountInserted != null)
@@ -86,7 +86,7 @@ public class SocialMediaController {
         Account accountFromBody = context.bodyAsClass(Account.class);
 
         // Insert the account into the application's database
-        Account accountLoggedIn = accountService.loginToAccount(accountFromBody);
+        Account accountLoggedIn = socialMediaService.loginToAccount(accountFromBody);
 
         // Set the HTTP response based on whether or not the account was successfully logged in to
         if (accountLoggedIn != null)
