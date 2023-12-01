@@ -2,6 +2,7 @@ package Controller;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import java.util.ArrayList;
 import Model.*;
 import Service.*;
 
@@ -29,6 +30,8 @@ public class SocialMediaController {
         app.post("/login", this::loginToAccount);
         
         app.post("/messages", this::addMessage);
+
+        app.get("/messages", this::getAllMessages);
 
         return app;
     }
@@ -100,6 +103,21 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+    }
+
+    /**
+     * Gets all messages from the application's database
+     * 
+     * Always sets the HTTP response status to 200
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void getAllMessages(Context context) {
+        // Get all messages from the application's database
+        ArrayList<Message> messageList = socialMediaService.getAllMessages();
+
+        // Set the HTTP response status to 200
+        context.json(messageList).status(200);
     }
 
     /**

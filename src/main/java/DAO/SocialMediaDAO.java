@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 import Model.*;
 import Util.ConnectionUtil;
 
@@ -195,5 +196,40 @@ public class SocialMediaDAO {
 
         // If a SQLException occurred or an account with the desired username was not found, then return null
         return null;
+    }
+
+    /**
+     * Gets all messages from the application's database
+     * 
+     * @return a list of Message objects
+     */
+    public ArrayList<Message> getAllMessages() {
+        ArrayList<Message> messageList = new ArrayList<>();
+
+        try {
+            // Get a connection to the application's database
+            Connection connection = ConnectionUtil.getConnection();
+
+            // Create a SQL statement that gets all messages
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Message");
+
+            // Run the SQL statement
+            ResultSet rs = ps.executeQuery();
+
+            // If message data was found by the query, then create Message objects from each row and add them to a list
+            while (rs.next()) {
+                int message_id = rs.getInt(1);
+                int posted_by = rs.getInt(2);
+                String message_text = rs.getString(3);
+                long time_posted_epoch = rs.getLong(4);
+
+                messageList.add(new Message(message_id, posted_by, message_text, time_posted_epoch));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return messageList;
     }
 }

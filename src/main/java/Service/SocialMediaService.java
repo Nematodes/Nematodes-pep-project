@@ -1,6 +1,7 @@
 package Service;
 
 import DAO.SocialMediaDAO;
+import java.util.ArrayList;
 import Model.*;
 
 public class SocialMediaService {
@@ -66,6 +67,15 @@ public class SocialMediaService {
 
         // Add a message using the desired posted_by, message_text, and time_posted_epoch fields
         return socialMediaDao.addMessage(messageToAdd.getPosted_by(), messageToAdd.getMessage_text(), messageToAdd.getTime_posted_epoch());
+    }
+
+    /**
+     * Gets all messages from the application's database
+     * 
+     * @return a list of Message objects
+     */
+    public ArrayList<Message> getAllMessages() {
+        return socialMediaDao.getAllMessages();
     }
 
     /**
