@@ -27,6 +27,8 @@ public class SocialMediaController {
         app.post("/register", this::addAccount);
 
         app.post("/login", this::loginToAccount);
+        
+        app.post("/messages", this::addMessage);
 
         return app;
     }
@@ -55,6 +57,36 @@ public class SocialMediaController {
         if (accountInserted != null)
         {
             context.json(accountInserted).status(200);
+        }
+        else
+        {
+            context.status(400);
+        }
+    }
+
+    /**
+     * Attempts to add a new message to the application's database.
+     * 
+     * The attempt will fail under the following conditions:
+     * The message is not between 1 and 254 (inclusive) charcters long
+     * The message is not posted by an existing user account
+     * 
+     * On success, the HTTP response status is set to 200.
+     * On failure, the HTTP response status is set to 400.
+     * 
+     * @param context the Javalin Context object manages information about both the HTTP request and response.
+     */
+    private void addMessage(Context context) {
+        // Get the Message object from the Javalin context
+        Message messageFromBody = context.bodyAsClass(Message.class);
+
+        // Insert the message into the application's database
+        Message messageInserted = socialMediaService.addMessage(messageFromBody);
+
+        // Set the HTTP response based on whether or not the message was successfully added
+        if (messageInserted != null)
+        {
+            context.json(messageInserted).status(200);
         }
         else
         {
