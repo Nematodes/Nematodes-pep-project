@@ -14,17 +14,23 @@ public class AccountDAO {
      */
     public Account addAccount(String username, String password) {
         try {
+            // Get a connection to the application's database
             Connection connection = ConnectionUtil.getConnection();
 
+            // Create a SQL statement that inserts an Account
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Account(username, password) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 
+            // Set the username and password parameters of the SQL statement
             ps.setString(1, username);
             ps.setString(2, password);
 
+            // Run the SQL statement
             ps.executeUpdate();
 
+            // Get the data returned from the SQL statement
             ResultSet rs = ps.getGeneratedKeys();
 
+            // Create and return an Account based on the information returned from the SQL statement (if an account was inserted at all)
             while (rs.next()) {
                 int resultId = rs.getInt(1);
 
@@ -35,6 +41,7 @@ public class AccountDAO {
             e.printStackTrace();
         }
 
+        // If a SQLException occurred or the Account was not successfully inserted, then return null
         return null;
     }
 
@@ -46,14 +53,19 @@ public class AccountDAO {
      */
     public Account getAccountByUsername(String username) {
         try {
+            // Get a connection to the application's database
             Connection connection = ConnectionUtil.getConnection();
 
+            // Create a SQL statement that gets all accounts with the desired username (there should only be one)
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Account WHERE username = ?");
 
+            // Set the username parameter of the SQL statement
             ps.setString(1, username);
 
+            // Run the SQL statement
             ResultSet rs = ps.executeQuery();
 
+            // If account data was found by the query, then create and return an Account using that data
             while (rs.next()) {
                 int resultId = rs.getInt(1);
                 String resultPassword = rs.getString(3);
@@ -65,6 +77,7 @@ public class AccountDAO {
             e.printStackTrace();
         }
 
+        // If a SQLException occurred or an account with the desired username was not found, then return null
         return null;
     }
 }

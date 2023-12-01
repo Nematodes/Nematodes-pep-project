@@ -43,10 +43,13 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void addAccount(Context context) {
+        // Get the Account object from the Javalin context
         Account accountFromBody = context.bodyAsClass(Account.class);
 
+        // Insert the account into the application's database
         Account accountInserted = accountService.addAccount(accountFromBody);
 
+        // Set the HTTP response based on whether or not the account was successfully added
         if (accountInserted != null)
         {
             context.json(accountInserted).status(200);
